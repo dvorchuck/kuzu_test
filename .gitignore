@@ -1,0 +1,7 @@
+
+node_modules
+
+# database
+
+csv/
+demo_db/
