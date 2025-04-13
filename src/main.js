@@ -34,7 +34,8 @@ function createCsv(n) {
 
 function createRelationCsv(n) {
   return (
-    "from,to,years\n" +
+    /** for relationship table csv, the first row is ommited */
+    // "FROM,TO,since\n" +
     Array.from(Array(n - 1).keys())
       .map((el) => {
         return `Alice${el},Alice${el + 1},10`;
@@ -63,13 +64,14 @@ async function main() {
   const startQueryKnows = performance.now();
   const relationPath = "./csv/knows.csv";
   fs.writeFileSync(relationPath, createRelationCsv(N));
+  await connection.query(`COPY KNOWS FROM "${relationPath}"`);
 
   console.log(`Knows setup took ${performance.now() - startQueryKnows}ms`);
 
   // setup summary
   console.log(`Whole setup took ${performance.now() - start}ms`);
 
-  // Query and print results
+  // // Query and print results
   // const result = await connection.query(`
   //   MATCH (a:Person)
   //   RETURN a.name;
@@ -80,7 +82,16 @@ async function main() {
   //   // console.log(row);
   // }
 
-  connection.close();
+  // // Query and print results
+  // const resultRelation = await connection.query(`
+  //   MATCH (a:Person)-[e:Knows]->(b:Person)
+  //   RETURN a.name, e.since, b.name;
+  // `);
+
+  // while (await resultRelation.hasNext()) {
+  //   const row = await resultRelation.getNext();
+  //   console.log(row);
+  // }
 }
 
 main();
