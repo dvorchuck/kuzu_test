@@ -67,7 +67,7 @@ async function main() {
   console.log(`Knows setup took ${performance.now() - startQueryKnows}ms`);
 
   // setup summary
-  console.log(`Setup took ${performance.now() - start}ms`);
+  console.log(`Whole setup took ${performance.now() - start}ms`);
 
   // Query and print results
   // const result = await connection.query(`
