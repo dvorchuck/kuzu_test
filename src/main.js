@@ -1,22 +1,30 @@
 import kuzu from "kuzu";
 import * as fs from "fs";
 
+console.log("os", process.platform, "arch", process.arch);
+
 async function setup() {
   // Create database directory if it doesn't exist
   // const dbPath = "./my-kuzu-db";
   const dbPath = ":memory:";
 
   // Initialize DB and connection
+  console.log("Setting up database at", dbPath);
   const db = new kuzu.Database(dbPath);
+  console.log("Database initialized");
+
   const conn = new kuzu.Connection(db);
 
+  console.log("Connection established");
   // Schema creation
   await conn.query(`
     CREATE NODE TABLE IF NOT EXISTS Person(name STRING, age INT64, PRIMARY KEY(name));
   `);
+  console.log("Person table created");
   await conn.query(`
     CREATE REL TABLE IF NOT EXISTS Knows(FROM Person TO Person, since INT64);
   `);
+  console.log("Knows relationship table created");
 
   return conn;
 }
@@ -50,6 +58,11 @@ async function main() {
   const start = performance.now();
 
   const connection = await setup();
+
+
+  if (!fs.existsSync("./csv")) {
+    fs.mkdirSync("./csv");
+  }
 
   // person setup
   const csvPath = "./csv/person.csv";
@@ -94,4 +107,10 @@ async function main() {
   // }
 }
 
-main();
+try {
+  await main();
+} catch (e) {
+  console.error("Error in main:", e);
+}
+
+setInterval(() => { }, 1000); // keep the process alive to inspect memory usage

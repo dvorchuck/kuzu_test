@@ -5,12 +5,16 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "start": "node src/main.js"
+    "start": "node src/main.js",
+    "image": "podman build -t kuzu_test .",
+    "image:prod": "podman build -t kuzu_prod -f Dockerfile_prod .",
+    "container": "podman run --rm -it kuzu_test",
+    "container:prod": "podman run --rm -it kuzu_prod"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "kuzu": "^0.9.0"
+    "kuzu": "^0.10.1"
   }
 }
